@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let suppressChatbotPositionCycleClick = false;
   let activeTooltipTrigger = null;
   let tooltipHideTimeout = null;
+  let chatbotLayoutSyncFrame = null;
   const chatbotDockPositions = ['bottom-right', 'bottom-left', 'top-left', 'top-right'];
 
   chatbotTooltip.id = 'chatbot-move-tooltip';
@@ -186,6 +187,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const clampCurrentChatbotPosition = () => {
     setChatbotPosition(chatbotPosition.x, chatbotPosition.y);
+  };
+
+  const syncChatbotLayout = () => {
+    chatbotLayoutSyncFrame = null;
+    clampCurrentChatbotPosition();
+
+    if (chatbotMessages) {
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    repositionVisibleChatbotTooltip();
+  };
+
+  const scheduleChatbotLayoutSync = () => {
+    if (chatbotLayoutSyncFrame) {
+      return;
+    }
+
+    chatbotLayoutSyncFrame = window.requestAnimationFrame(syncChatbotLayout);
   };
 
   const getChatbotDockPosition = (dockPosition) => {
@@ -364,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chatbotToggle.setAttribute('aria-expanded', 'true');
 
     window.setTimeout(() => {
-      clampCurrentChatbotPosition();
+      scheduleChatbotLayoutSync();
       chatbotInput?.focus();
     }, 0);
   };
@@ -403,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
     paragraph.textContent = message;
     messageElement.append(paragraph);
     chatbotMessages.append(messageElement);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    scheduleChatbotLayoutSync();
   };
 
   const getChatbotResponse = (question) => {
@@ -650,6 +670,15 @@ document.addEventListener('DOMContentLoaded', () => {
     clampCurrentChatbotPosition();
     repositionVisibleChatbotTooltip();
   });
+
+  if ('ResizeObserver' in window && chatbotPanel) {
+    const chatbotResizeObserver = new ResizeObserver(scheduleChatbotLayoutSync);
+    chatbotResizeObserver.observe(chatbotPanel);
+
+    if (chatbotMessages) {
+      chatbotResizeObserver.observe(chatbotMessages);
+    }
+  }
 
   window.addEventListener('scroll', repositionVisibleChatbotTooltip, true);
 

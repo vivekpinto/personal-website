@@ -789,13 +789,20 @@ ul {
   background: rgb(255 255 255 / 0.16);
 }
 
+.chatbot__toggle-image {
+  width: 1.85rem;
+  height: 1.85rem;
+  object-fit: contain;
+}
+
 .chatbot__panel {
   display: flex;
   width: clamp(20rem, 32vw, 26rem);
   max-width: 100%;
   max-height: min(42rem, calc(100dvh - 2rem));
   flex-direction: column;
-  overflow: visible;
+  min-height: 0;
+  overflow: hidden;
   border: 1px solid var(--color-slate-200);
   border-radius: 1.25rem;
   background: var(--color-white);
@@ -966,7 +973,9 @@ ul {
   flex-direction: column;
   gap: 0.75rem;
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background:
     linear-gradient(180deg, rgb(248 250 252 / 0.94), rgb(255 255 255 / 0.98)),
     var(--color-white);
@@ -1165,14 +1174,17 @@ ul {
   }
 
   .chatbot.is-open {
+    top: 1rem;
     right: 1rem;
+    bottom: 1rem;
     left: 1rem;
+    max-height: calc(100dvh - 2rem);
     max-width: none;
   }
 
   .chatbot__panel {
     width: 100%;
-    max-height: min(38rem, calc(100dvh - 2rem));
+    max-height: 100%;
   }
 
   .chatbot__toggle {
@@ -1214,8 +1226,11 @@ ul {
   }
 
   .chatbot.is-open {
+    top: 0.75rem;
     right: 0.75rem;
+    bottom: 0.75rem;
     left: 0.75rem;
+    max-height: calc(100dvh - 1.5rem);
     max-width: none;
   }
 
