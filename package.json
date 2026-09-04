@@ -15,7 +15,7 @@
     "test:e2e:smoke": "playwright test --config=playwright.config.ts --grep @smoke",
     "test:e2e:report": "playwright show-report",
     "report:allure": "node scripts/generate-allure-report.cjs",
-    "report:allure:open": "allure open allure-report"
+    "report:allure:open": "allure-commandline open allure-report"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
@@ -33,6 +33,7 @@
     "@playwright/test": "^1.62.1",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
+    "allure-commandline": "^2.43.0",
     "autoprefixer": "^10.4.21",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
