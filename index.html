@@ -118,6 +118,7 @@
             <li><a href="#projects" class="mobile-nav-link">Projects</a></li>
             <li><a href="#skills" class="mobile-nav-link">Skills</a></li>
             <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+            <li><a href="#qa-automation" class="mobile-nav-link">QA Automation</a></li>
           </ul>
         </nav>
       </div>
@@ -240,6 +241,59 @@
           </div>
         </div>
       </section>
+      <section id="qa-automation" class="qa-automation-section">
+        <div class="section-container">
+          <h2 class="section-title section-title--with-icon">
+            <svg
+              class="section-title__icon"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 12 2 2 4-4" />
+              <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9Z" />
+            </svg>
+            QA Automation
+          </h2>
+          <p class="qa-automation__intro">
+            This portfolio is tested using a Playwright end-to-end automation
+            framework. The test suite validates key user journeys, navigation,
+            content, and external links.
+          </p>
+          <div
+            id="test-catalog"
+            class="test-catalog"
+            aria-label="Automated test coverage"
+          ></div>
+          <div class="qa-automation__actions">
+            <a
+              href="https://github.com/vivekpinto/personal-website/actions"
+              class="button button--primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Test Runs
+            </a>
+
+            <a
+              href="/personal-website/test-report/"
+              class="button button--secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Allure Report
+            </a>
+          </div>
+        </div>
+      </section>
+
 
       <section id="education" class="education-section">
         <div class="section-container section-container--narrow">
@@ -538,5 +592,6 @@
     </footer>
 
     <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/qa-dashboard.js"></script>
   </body>
 </html>

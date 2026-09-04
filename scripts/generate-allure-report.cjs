@@ -14,7 +14,7 @@ if (fs.existsSync(historySource)) {
 }
 
 execSync(
-  'npx allure generate allure-results --clean -o allure-report',
+  'npx allure-commandline generate allure-results --clean -o allure-report',
   {
     stdio: 'inherit',
   }
