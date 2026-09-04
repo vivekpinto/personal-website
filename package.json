@@ -13,7 +13,9 @@
     "test:e2e:ui": "playwright test --config=playwright.config.ts --ui",
     "test:e2e:headed": "playwright test --config=playwright.config.ts --headed",
     "test:e2e:smoke": "playwright test --config=playwright.config.ts --grep @smoke",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "report:allure": "node scripts/generate-allure-report.cjs",
+    "report:allure:open": "allure open allure-report"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
