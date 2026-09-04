@@ -83,6 +83,36 @@ jobs:
       - name: Run regression tests
         run: npm run test:e2e
 
+      - name: Load previous Allure history
+        if: ${{ !cancelled() }}
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+        ref: gh-pages
+        path: gh-pages
+      
+      - name: Restore Allure history
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          if [ -d "gh-pages/allure-history/history" ]; then
+            mkdir -p allure-results/history
+            cp -R gh-pages/allure-history/history/. allure-results/history/
+          fi
+
+      - name: Generate Allure report
+        if: ${{ !cancelled() }}
+        run: npm run report:allure
+      
+      - name: Publish Allure history
+        if: ${{ !cancelled() }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+          destination_dir: allure-history
+
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
