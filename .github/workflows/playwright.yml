@@ -110,6 +110,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: npm run report:allure
       
+      - name: Add test summary to Allure report
+        if: ${{ !cancelled() }}
+        run: |
+          cp test-results/test-summary.json allure-report/test-summary.json
+
+          echo "Files being published:"
+          ls -la allure-report/
+
       - name: Publish Allure history
         if: ${{ !cancelled() }}
         uses: peaceiris/actions-gh-pages@v4
@@ -118,6 +126,7 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-report
           destination_dir: allure-history
+          keep_files: true
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
