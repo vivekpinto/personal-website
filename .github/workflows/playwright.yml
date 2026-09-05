@@ -84,6 +84,10 @@ jobs:
 
       - name: Run regression tests
         run: npm run test:e2e
+      
+      - name: Generate test summary
+        if: ${{ !cancelled() }}
+        run: npm run generate:test-summary
 
       - name: Load previous Allure history
         if: ${{ !cancelled() }}

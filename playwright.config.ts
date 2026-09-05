@@ -9,6 +9,7 @@ export default defineConfig({
      reporter: [
       ['html'],
       ['list'],
+      ['json', { outputFile: 'test-results/playwright-results.json' }],
     ],
 
 

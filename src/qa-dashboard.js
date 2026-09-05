@@ -129,4 +129,119 @@ function renderTestCatalog() {
   `;
 }
 
-document.addEventListener('DOMContentLoaded', renderTestCatalog);
+async function loadAutomationStatus() {
+  const container = document.querySelector('#automation-status');
+
+  if (!container) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      'https://api.github.com/repos/vivekpinto/personal-website/actions/runs?per_page=10'
+    );
+
+    if (!response.ok) {
+      throw new Error('Unable to retrieve GitHub Actions status');
+    }
+
+    const data = await response.json();
+
+    const workflowRuns = data.workflow_runs || [];
+
+    const playwrightRun = workflowRuns.find(
+      (run) => run.name === 'Playwright E2E Tests'
+    );
+
+    if (!playwrightRun) {
+      container.innerHTML = `
+        <div class="automation-status__content">
+          <h3>Automation Status</h3>
+          <p>No Playwright test run found yet.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    const status = playwrightRun.conclusion;
+
+    const statusIcon =
+      status === 'success'
+        ? '✓'
+        : status === 'failure'
+          ? '✕'
+          : '•';
+
+    const statusText =
+      status === 'success'
+        ? 'Passed'
+        : status === 'failure'
+          ? 'Failed'
+          : 'In Progress';
+
+    const statusClass =
+      status === 'success'
+        ? 'success'
+        : status === 'failure'
+          ? 'failure'
+          : 'running';
+
+    const runDate = new Date(
+      playwrightRun.updated_at
+    ).toLocaleString();
+
+    container.innerHTML = `
+      <div class="automation-status__content">
+
+        <h3>Automation Status</h3>
+
+        <div class="automation-status__details">
+
+          <div class="automation-status__item">
+            <span class="automation-status__label">
+              Last Run
+            </span>
+
+            <span class="automation-status__value">
+              ${runDate}
+            </span>
+          </div>
+
+          <div class="automation-status__item">
+            <span class="automation-status__label">
+              Status
+            </span>
+
+            <span
+              class="automation-status__value automation-status__value--${statusClass}"
+            >
+              ${statusIcon} ${statusText}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  } catch (error) {
+    console.error(
+      'Unable to load automation status:',
+      error
+    );
+
+    container.innerHTML = `
+      <div class="automation-status__content">
+        <h3>Automation Status</h3>
+        <p>
+          Unable to retrieve the latest test run.
+        </p>
+      </div>
+    `;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderTestCatalog();
+  loadAutomationStatus();
+});
