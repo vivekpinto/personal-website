@@ -483,14 +483,6 @@ function startAutomationStatusPolling() {
   setTimeout(poll, pollingInterval);
 }
 
-function startAutomationStatusPolling() {
-  const pollingInterval = 10000;
-
-  setInterval(() => {
-    loadAutomationStatus();
-  }, pollingInterval);
-}
-
 
 document.addEventListener('DOMContentLoaded', () => {
   renderTestCatalog();
