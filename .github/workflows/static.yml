@@ -49,6 +49,17 @@ jobs:
             exit 1
           fi
 
+          echo "Files in test-report:"
+          ls -la test-report/
+
+          echo "Checking test summary:"
+          if [ -f "test-report/test-summary.json" ]; then
+            cat test-report/test-summary.json
+          else
+            echo "ERROR: test-summary.json was not found!"
+            exit 1
+          fi
+
       # 4. Setup GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
