@@ -390,12 +390,9 @@ async function runAutomationTests() {
       );
     }
 
-    button.textContent = '✓ Tests started';
+    button.textContent = '⏳ Tests running...';
 
-    setTimeout(() => {
-      button.textContent = '▶ Run Automation Tests';
-      button.disabled = false;
-    }, 3000);
+    startAutomationStatusPolling();
 
   } catch (error) {
     console.error(
@@ -410,6 +407,88 @@ async function runAutomationTests() {
       button.disabled = false;
     }, 3000);
   }
+}
+
+function startAutomationStatusPolling() {
+  const pollingInterval = 10000;
+
+  const summaryUrl =
+    '/personal-website/test-report/test-summary.json';
+
+  const initialRunTime = Date.now();
+
+  const poll = async () => {
+    try {
+      const response = await fetch(
+        `${summaryUrl}?t=${Date.now()}`,
+        {
+          cache: 'no-store',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Unable to retrieve test summary: ${response.status}`
+        );
+      }
+
+      const summary = await response.json();
+
+      if (!summary.generatedAt) {
+        setTimeout(poll, pollingInterval);
+        return;
+      }
+
+      const generatedTime =
+        new Date(summary.generatedAt).getTime();
+
+      /*
+       * Ignore the existing report.
+       * We only want to update the dashboard when
+       * a NEW test summary has been generated.
+       */
+      if (generatedTime <= initialRunTime) {
+        setTimeout(poll, pollingInterval);
+        return;
+      }
+
+      /*
+       * A new test result is available.
+       */
+      await loadAutomationStatus();
+
+      const button =
+        document.querySelector('#run-automation-tests');
+
+      if (button) {
+        button.disabled = false;
+        button.textContent = '✓ Tests completed';
+
+        setTimeout(() => {
+          button.textContent =
+            '▶ Run Automation Tests';
+        }, 3000);
+      }
+
+    } catch (error) {
+      console.error(
+        'Unable to check automation status:',
+        error
+      );
+
+      setTimeout(poll, pollingInterval);
+    }
+  };
+
+  setTimeout(poll, pollingInterval);
+}
+
+function startAutomationStatusPolling() {
+  const pollingInterval = 10000;
+
+  setInterval(() => {
+    loadAutomationStatus();
+  }, pollingInterval);
 }
 
 
