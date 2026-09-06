@@ -60,7 +60,9 @@ jobs:
   regression:
     name: Regression Tests
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch'
 
     timeout-minutes: 15
 
