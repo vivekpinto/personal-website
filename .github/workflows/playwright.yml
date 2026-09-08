@@ -120,6 +120,15 @@ jobs:
           echo "Files being published:"
           ls -la allure-report/
 
+          echo "Allure report generated at:"
+          date -u
+
+          echo "Allure report index:"
+          ls -la allure-report/index.html
+
+          echo "Allure history:"
+          ls -la allure-report/history/ || true
+
       - name: Publish Allure history
         if: ${{ !cancelled() }}
         uses: peaceiris/actions-gh-pages@v4
