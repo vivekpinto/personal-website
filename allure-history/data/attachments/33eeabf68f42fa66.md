@@ -1,0 +1,197 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: smoke\homepage.spec.ts >> @smoke portfolio homepage loads
+- Location: e2e\tests\smoke\homepage.spec.ts:3:1
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e3]: Opens in a new tab
+  - generic [ref=e4]: Drag with one pointer to move the chatbot. Click this control without dragging to move it to the next screen corner. Keyboard users can focus this control and use arrow keys to move it. Hold Shift with arrow keys to move farther. Press Home to reset its position.
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - link "Vivek Pinto" [ref=e7] [cursor=pointer]:
+        - /url: "#home"
+      - navigation "Main Navigation" [ref=e8]:
+        - list [ref=e9]:
+          - listitem [ref=e10]:
+            - link "Home" [ref=e11] [cursor=pointer]:
+              - /url: "#home"
+          - listitem [ref=e12]:
+            - link "Experience" [ref=e13] [cursor=pointer]:
+              - /url: "#experience"
+          - listitem [ref=e14]:
+            - link "Education" [ref=e15] [cursor=pointer]:
+              - /url: "#education"
+          - listitem [ref=e16]:
+            - link "Projects" [ref=e17] [cursor=pointer]:
+              - /url: "#projects"
+          - listitem [ref=e18]:
+            - link "Skills" [ref=e19] [cursor=pointer]:
+              - /url: "#skills"
+          - listitem [ref=e20]:
+            - link "Contact" [ref=e21] [cursor=pointer]:
+              - /url: "#contact"
+  - main [ref=e22]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "Vivek Pinto" [level=1] [ref=e26]
+        - paragraph [ref=e27]: Quality Engineer with 3 plus years of experience in Manual, Accessibility, and Automation Testing, automating 150 plus test cases and delivering accessible digital experiences with 95% and more WCAG conformance.
+        - generic [ref=e28]:
+          - link "Let's Connect" [ref=e29] [cursor=pointer]:
+            - /url: "#contact"
+          - link "View Experience" [ref=e30] [cursor=pointer]:
+            - /url: "#experience"
+      - img "Vivek Pinto's avatar" [ref=e34]
+    - article [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Professional Summary" [level=2] [ref=e37]
+        - paragraph [ref=e38]:
+          - text: Results-oriented Quality Assurance Engineer specializing in
+          - strong [ref=e39]: accessible EdTech product testing
+          - text: . I embed accessibility into the QA lifecycle through WCAG 2.2 compliance, automated testing, and shift-left quality practices. I've delivered ten consecutive production releases with
+          - strong [ref=e40]: zero critical defects
+          - text: while maintaining high accessibility standards.
+    - generic [ref=e42]:
+      - heading "Professional Experience" [level=2] [ref=e43]
+      - generic [ref=e47]:
+        - article [ref=e48]:
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - heading "Quality Assurance Engineer | Accessibility Specialist" [level=3] [ref=e51]
+              - paragraph [ref=e52]: Zeus Learning
+            - generic [ref=e53]:
+              - time [ref=e54]: Jun 2023 - Aug 2026
+              - generic [ref=e55]: Mumbai, Maharashtra
+          - list [ref=e56]:
+            - listitem [ref=e57]:
+              - paragraph [ref=e60]: Designed and executed 200+ test cases and developed 150+ Playwright scripts, expanding regression coverage by 40%.
+            - listitem [ref=e61]:
+              - paragraph [ref=e64]: Led comprehensive WCAG 2.2 AA audits using NVDA, JAWS, VoiceOver, and TalkBack.
+            - listitem [ref=e65]:
+              - paragraph [ref=e68]: Identified and remediated 100+ accessibility barriers, achieving 95%+ compliance across enterprise platforms.
+            - listitem [ref=e69]:
+              - paragraph [ref=e72]: Partnered with designers and developers to reduce post-release defects by 35% through shift-left testing.
+        - article [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Digital Evaluator" [level=3] [ref=e76]
+              - paragraph [ref=e77]: Accessible Community
+            - generic [ref=e78]:
+              - time [ref=e79]: Sep 2025 - Present
+              - generic [ref=e80]: Remote
+          - list [ref=e81]:
+            - listitem [ref=e82]:
+              - paragraph [ref=e85]: Contributing to global accessibility initiatives by evaluating digital products and advising on inclusive design enhancements.
+            - listitem [ref=e86]:
+              - paragraph [ref=e89]: Develop accessibility-focused technical content covering key topics such as ARIA, accessible names and descriptions, semantic HTML, keyboard accessibility, and WCAG guidelines.
+    - generic [ref=e91]:
+      - heading "Education" [level=2] [ref=e92]
+      - article [ref=e96]:
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - heading "St. Francis Institute of Technology" [level=3] [ref=e99]
+            - paragraph [ref=e100]: B.E. Computer Engineering
+          - generic [ref=e101]:
+            - time [ref=e102]: June 2019 - May 2023
+            - generic [ref=e103]: Mumbai, Maharashtra
+        - list [ref=e104]:
+          - listitem [ref=e105]:
+            - paragraph [ref=e108]: Completed Bachelor of Engineering in Computer Engineering with a CGPA of 7.92.
+    - generic [ref=e110]:
+      - heading "Key Projects" [level=2] [ref=e111]
+      - generic [ref=e115]:
+        - article [ref=e116]:
+          - heading "Playwright Automation Framework" [level=3] [ref=e117]
+          - paragraph [ref=e118]: Internal Framework - 2024
+          - paragraph [ref=e119]: Developed a modular automation framework using TypeScript, improving regression speed by 30% and supporting CI/CD integration.
+          - generic [ref=e120]:
+            - generic [ref=e121]: "Technologies used:"
+            - generic [ref=e122]: TypeScript
+            - generic [ref=e123]: Playwright
+            - generic [ref=e124]: Agile
+        - article [ref=e125]:
+          - heading "Enterprise LMS Overhaul" [level=3] [ref=e126]
+          - paragraph [ref=e127]: Major EdTech Client - 2024 to 2025
+          - paragraph [ref=e128]: Led full accessibility audit for an LMS with 100k+ users. Documented 150+ violations to achieve AA compliance within 6 months.
+          - generic [ref=e129]:
+            - generic [ref=e130]: "Technologies used:"
+            - generic [ref=e131]: WCAG 2.2
+            - generic [ref=e132]: Accessibility testing
+            - generic [ref=e133]: Audit
+            - generic [ref=e134]: Remediation
+        - article [ref=e135]:
+          - heading "ENTERPRISE ACCESSIBILITY INTEGRATION" [level=3] [ref=e136]
+          - paragraph [ref=e137]: Major EdTech Client – 2025 to 2026
+          - paragraph [ref=e138]: Led a Shift-Left Accessibility strategy across UX, development, QA, and product teams. Achieved 95–98% accessibility compliance before the final ACR audit, with only 2–5% minor issues identified during assessment.
+          - generic [ref=e139]:
+            - generic [ref=e140]: "Technologies used:"
+            - generic [ref=e141]: Shift-Left
+            - generic [ref=e142]: Design Review
+            - generic [ref=e143]: WCAG 2.2
+            - generic [ref=e144]: Accessibility testing
+            - generic [ref=e145]: Remediation
+    - generic [ref=e147]:
+      - generic [ref=e148]:
+        - heading "Technical Skills" [level=2] [ref=e149]
+        - paragraph [ref=e150]: Expertise across accessibility standards, automated testing, and development tools.
+      - generic [ref=e151]:
+        - region [ref=e152]:
+          - heading "Accessibility" [level=3] [ref=e153]
+          - list [ref=e154]:
+            - listitem [ref=e155]: WCAG 2.2 & Section 508
+            - listitem [ref=e156]: Axe DevTools & Insights
+            - listitem [ref=e157]: NVDA, JAWS, VoiceOver
+            - listitem [ref=e158]: PDF/UA Remediation
+        - region [ref=e159]:
+          - heading "Automation" [level=3] [ref=e160]
+          - list [ref=e161]:
+            - listitem [ref=e162]: Playwright
+            - listitem [ref=e163]: TypeScript & JavaScript
+            - listitem [ref=e164]: CI/CD Pipelines
+            - listitem [ref=e165]: Regression Testing
+        - region [ref=e166]:
+          - heading "Development" [level=3] [ref=e167]
+          - list [ref=e168]:
+            - listitem [ref=e169]: HTML5 & CSS3
+            - listitem [ref=e170]: WAI-ARIA
+            - listitem [ref=e171]: Responsive Design
+            - listitem [ref=e172]: Git & GitHub
+    - generic [ref=e174]:
+      - heading "Let's build something inclusive." [level=2] [ref=e175]
+      - paragraph [ref=e176]: I'm currently open to networking and new challenges in QA or accessibility-focused roles.
+      - generic [ref=e177]:
+        - link "Email" [ref=e178] [cursor=pointer]:
+          - /url: mailto:vivekpinto5@gmail.com
+        - link "LinkedIn" [ref=e183] [cursor=pointer]:
+          - /url: https://linkedin.com/in/vivekpinto2001
+        - link "GitHub" [ref=e193] [cursor=pointer]:
+          - /url: https://github.com/vivekpinto
+        - link "Resume" [ref=e202] [cursor=pointer]:
+          - /url: Vivek_Pinto-Resume2026.pdf
+  - complementary "Ask Vivek assistant":
+    - generic [ref=e211]:
+      - button "Ask Vivek" [ref=e212] [cursor=pointer]
+      - button "Move Ask Vivek button" [ref=e215]
+  - contentinfo [ref=e221]:
+    - generic [ref=e222]:
+      - generic [ref=e223]:
+        - paragraph [ref=e224]: Vivek Pinto
+        - paragraph [ref=e225]: Empowering Web Accessibility through QA.
+      - paragraph [ref=e226]: © 2026 - High-performance, Accessible Portfolio.
+```
