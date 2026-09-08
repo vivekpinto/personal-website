@@ -109,18 +109,18 @@ jobs:
           fi
       
       - name: Inspect Allure results
-          if: ${{ !cancelled() }}
-          run: |
-            echo "=== Allure Results ==="
-            find allure-results -maxdepth 2 -type f -print
+        if: ${{ !cancelled() }}
+        run: |
+          echo "=== Allure Results ==="
+          find allure-results -maxdepth 2 -type f -print
 
-            echo ""
-            echo "=== Result file count ==="
-            find allure-results -type f | wc -l
+          echo ""
+          echo "=== Result file count ==="
+          find allure-results -type f | wc -l
 
-            echo ""
-            echo "=== Result files ==="
-            ls -lah allure-results/
+          echo ""
+          echo "=== Result files ==="
+          ls -lah allure-results/
 
       - name: Generate Allure report
         if: ${{ !cancelled() }}
