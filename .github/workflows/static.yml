@@ -2,8 +2,11 @@
 name: Deploy static content to Pages
 
 on:
-  push:
-    branches: ["main"]
+  workflow_run:
+    workflows:
+      - Playwright E2E Tests
+    types:
+      - completed
 
   workflow_dispatch:
 
@@ -18,6 +21,14 @@ concurrency:
 
 jobs:
   deploy:
+    # Only deploy when the Playwright workflow completed successfully
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push'
+      )
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -26,11 +37,13 @@ jobs:
 
     steps:
 
-      # 1. Checkout portfolio
-      - name: Checkout
+      # 1. Checkout portfolio from main
+      - name: Checkout portfolio
         uses: actions/checkout@v4
+        with:
+          ref: main
 
-      # 2. Checkout Allure report from gh-pages
+      # 2. Checkout the latest Allure report from gh-pages
       - name: Checkout Allure report
         uses: actions/checkout@v4
         with:
@@ -45,7 +58,7 @@ jobs:
           if [ -d "allure-source/allure-history" ]; then
             cp -R allure-source/allure-history/. test-report/
           else
-            echo "Allure report not found."
+            echo "ERROR: Allure report not found."
             exit 1
           fi
 
@@ -53,6 +66,7 @@ jobs:
           ls -la test-report/
 
           echo "Checking test summary:"
+
           if [ -f "test-report/test-summary.json" ]; then
             cat test-report/test-summary.json
           else
@@ -68,7 +82,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: .
 
       # 6. Deploy
       - name: Deploy to GitHub Pages

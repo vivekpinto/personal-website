@@ -1,5 +1,16 @@
 import { testCatalog } from './data/test-catalog.js';
 
+const SUMMARY_URL = 'https://vivekpinto.github.io/personal-website/test-report/test-summary.json';
+
+const WORKER_URL =
+  'https://portfolio-test-trigger.vivekpinto5.workers.dev';
+
+const POLLING_INTERVAL = 10000;
+
+let pollingTimer = null;
+let previousGeneratedAt = null;
+
+
 function renderTestCatalog() {
   const container = document.querySelector('#test-catalog');
 
@@ -14,7 +25,8 @@ function renderTestCatalog() {
 
   const automatedTests = testCatalog.reduce(
     (total, category) =>
-      total + category.tests.filter((test) => test.automated).length,
+      total +
+      category.tests.filter((test) => test.automated).length,
     0
   );
 
@@ -130,200 +142,214 @@ function renderTestCatalog() {
 }
 
 
-async function loadAutomationStatus() {
-  const container = document.querySelector('#automation-status');
+/*
+ * Fetch the latest test summary.
+ */
+async function fetchTestSummary() {
+  const response = await fetch(
+    `${SUMMARY_URL}?t=${Date.now()}`,
+    {
+      cache: 'no-store',
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Unable to retrieve test summary: ${response.status}`
+    );
+  }
+
+  return response.json();
+}
+
+
+/*
+ * Render the automation status.
+ */
+function renderAutomationStatus(summary) {
+  const container =
+    document.querySelector('#automation-status');
 
   if (!container) {
     return;
   }
 
-  /*
-   * This path works for the deployed GitHub Pages site
-   * and keeps the request relative to the portfolio.
-   */
-  const summaryUrl =
-    'test-report/test-summary.json';
+  const passed = Number(summary.passed) || 0;
+  const failed = Number(summary.failed) || 0;
+  const skipped = Number(summary.skipped) || 0;
+  const timedOut = Number(summary.timedOut) || 0;
+  const executed = Number(summary.executed) || 0;
+  const passRate = Number(summary.passRate) || 0;
 
-  try {
-    const response = await fetch(summaryUrl, {
-      cache: 'no-store',
-    });
+  const status =
+    failed > 0 || timedOut > 0
+      ? 'failure'
+      : executed === 0
+        ? 'unknown'
+        : 'success';
 
-    if (!response.ok) {
-      throw new Error(
-        `Unable to retrieve test summary: ${response.status}`
-      );
-    }
+  const statusIcon =
+    status === 'success'
+      ? '✓'
+      : status === 'failure'
+        ? '✕'
+        : '•';
 
-    const summary = await response.json();
+  const statusText =
+    status === 'success'
+      ? 'Passed'
+      : status === 'failure'
+        ? 'Failed'
+        : 'No tests executed';
 
-    /*
-     * Normalize the values coming from test-summary.json.
-     * This prevents "undefined" from appearing if a value
-     * is missing from the JSON.
-     */
-    const passed = Number(summary.passed) || 0;
-    const failed = Number(summary.failed) || 0;
-    const skipped = Number(summary.skipped) || 0;
-    const timedOut = Number(summary.timedOut) || 0;
-    const executed = Number(summary.executed) || 0;
-    const passRate = Number(summary.passRate) || 0;
-
-    /*
-     * Determine the overall automation status.
-     */
-    const status =
-      failed > 0 || timedOut > 0
+  const statusClass =
+    status === 'success'
+      ? 'success'
+      : status === 'failure'
         ? 'failure'
-        : executed === 0
-          ? 'unknown'
-          : 'success';
+        : 'unknown';
 
-    const statusIcon =
-      status === 'success'
-        ? '✓'
-        : status === 'failure'
-          ? '✕'
-          : '•';
+  const runDate = summary.generatedAt
+    ? new Date(summary.generatedAt).toLocaleString()
+    : 'Unavailable';
 
-    const statusText =
-      status === 'success'
-        ? 'Passed'
-        : status === 'failure'
-          ? 'Failed'
-          : 'No tests executed';
+  container.innerHTML = `
+    <div class="automation-status__content">
 
-    const statusClass =
-      status === 'success'
-        ? 'success'
-        : status === 'failure'
-          ? 'failure'
-          : 'unknown';
+      <h3>Latest Automation Run</h3>
 
-    /*
-     * Format the timestamp from test-summary.json.
-     */
-    const runDate = summary.generatedAt
-      ? new Date(summary.generatedAt).toLocaleString()
-      : 'Unavailable';
+      <div class="automation-status__result">
 
-    container.innerHTML = `
-      <div class="automation-status__content">
+        <span
+          class="automation-status__result-icon automation-status__result-icon--${statusClass}"
+          aria-hidden="true"
+        >
+          ${statusIcon}
+        </span>
 
-        <h3>Latest Automation Run</h3>
-
-        <div class="automation-status__result">
-
-          <span
-            class="automation-status__result-icon automation-status__result-icon--${statusClass}"
-            aria-hidden="true"
+        <div>
+          <strong
+            class="automation-status__result-text automation-status__result-text--${statusClass}"
           >
-            ${statusIcon}
-          </span>
+            ${statusText}
+          </strong>
 
-          <div>
-            <strong
-              class="automation-status__result-text automation-status__result-text--${statusClass}"
-            >
-              ${statusText}
-            </strong>
-
-            <p>
-              ${passed} of ${executed} tests passed
-            </p>
-          </div>
-
-        </div>
-
-        <div class="automation-status__details">
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Passed
-            </span>
-
-            <span class="automation-status__value">
-              ${passed}
-            </span>
-          </div>
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Failed
-            </span>
-
-            <span class="automation-status__value">
-              ${failed}
-            </span>
-          </div>
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Skipped
-            </span>
-
-            <span class="automation-status__value">
-              ${skipped}
-            </span>
-          </div>
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Timed Out
-            </span>
-
-            <span class="automation-status__value">
-              ${timedOut}
-            </span>
-          </div>
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Pass Rate
-            </span>
-
-            <span class="automation-status__value">
-              ${passRate}%
-            </span>
-          </div>
-
-          <div class="automation-status__item">
-            <span class="automation-status__label">
-              Last Run
-            </span>
-
-            <span class="automation-status__value">
-              ${runDate}
-            </span>
-          </div>
-
-        </div>
-
-        <div class="automation-status__actions">
-
-          <button
-            type="button"
-            id="run-automation-tests"
-            class="button button--primary"
-          >
-            ▶ Run Automation Tests
-          </button>
-
-          <a
-            href="test-report/"
-            class="button button--secondary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📊 View Allure Report
-          </a>
-
+          <p>
+            ${passed} of ${executed} tests passed
+          </p>
         </div>
 
       </div>
-    `;
+
+      <div class="automation-status__details">
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Passed
+          </span>
+          <span class="automation-status__value">
+            ${passed}
+          </span>
+        </div>
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Failed
+          </span>
+          <span class="automation-status__value">
+            ${failed}
+          </span>
+        </div>
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Skipped
+          </span>
+          <span class="automation-status__value">
+            ${skipped}
+          </span>
+        </div>
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Timed Out
+          </span>
+          <span class="automation-status__value">
+            ${timedOut}
+          </span>
+        </div>
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Pass Rate
+          </span>
+          <span class="automation-status__value">
+            ${passRate}%
+          </span>
+        </div>
+
+        <div class="automation-status__item">
+          <span class="automation-status__label">
+            Last Run
+          </span>
+          <span class="automation-status__value">
+            ${runDate}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="automation-status__actions">
+
+        <button
+          type="button"
+          id="run-automation-tests"
+          class="button button--primary"
+        >
+          ▶ Run Automation Tests
+        </button>
+
+        <a
+          href="test-report/"
+          class="button button--secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          📊 View Allure Report
+        </a>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/*
+ * Load the latest result when the page opens.
+ */
+async function loadAutomationStatus() {
+  const container =
+    document.querySelector('#automation-status');
+
+  if (!container) {
+    return;
+  }
+
+  try {
+    const summary = await fetchTestSummary();
+
+    /*
+     * Remember the currently displayed report.
+     * We will use this when a new test run starts.
+     */
+    previousGeneratedAt =
+      summary.generatedAt || null;
+
+    renderAutomationStatus(summary);
 
   } catch (error) {
+
     console.error(
       'Unable to load automation summary:',
       error
@@ -360,146 +386,251 @@ async function loadAutomationStatus() {
         </div>
 
       </div>
-    `;  
+    `;
   }
 }
 
+
+/*
+ * Start GitHub Actions workflow.
+ */
 async function runAutomationTests() {
-  const button = document.querySelector('#run-automation-tests');
+  const button =
+    document.querySelector('#run-automation-tests');
 
   if (!button) {
     return;
   }
 
-  const workerUrl =
-    'https://portfolio-test-trigger.vivekpinto5.workers.dev';
+  /*
+   * Get the timestamp BEFORE starting the new run.
+   */
+  let startingGeneratedAt =
+    previousGeneratedAt;
+
+  /*
+   * Make sure we have the latest existing timestamp.
+   */
+  try {
+    const currentSummary =
+      await fetchTestSummary();
+
+    startingGeneratedAt =
+      currentSummary.generatedAt ||
+      previousGeneratedAt;
+
+    previousGeneratedAt =
+      startingGeneratedAt;
+
+  } catch (error) {
+    console.warn(
+      'Could not determine current test timestamp:',
+      error
+    );
+  }
 
   button.disabled = true;
-  button.textContent = '⏳ Starting tests...';
+  button.textContent =
+    '⏳ Starting tests...';
 
   try {
-    const response = await fetch(workerUrl, {
-      method: 'POST',
-    });
+
+    const response = await fetch(
+      WORKER_URL,
+      {
+        method: 'POST',
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok || !data.success) {
       throw new Error(
-        data.error || 'Unable to start automation tests'
+        data.error ||
+        'Unable to start automation tests'
       );
     }
 
-    button.textContent = '⏳ Tests running...';
+    button.textContent =
+      '⏳ Tests running...';
 
-    startAutomationStatusPolling();
+    startAutomationStatusPolling(
+      startingGeneratedAt
+    );
 
   } catch (error) {
+
     console.error(
       'Unable to start automation tests:',
       error
     );
 
-    button.textContent = '✕ Unable to start';
+    button.disabled = false;
+
+    button.textContent =
+      '✕ Unable to start';
 
     setTimeout(() => {
-      button.textContent = '▶ Run Automation Tests';
-      button.disabled = false;
+      button.textContent =
+        '▶ Run Automation Tests';
     }, 3000);
   }
 }
 
-function startAutomationStatusPolling() {
-  const pollingInterval = 10000;
 
-  const summaryUrl =
-    '/personal-website/test-report/test-summary.json';
+/*
+ * Poll only after the user starts a test run.
+ */
+function startAutomationStatusPolling(
+  startingGeneratedAt
+) {
 
-  const initialRunTime = Date.now();
+  /*
+   * Stop an existing polling process.
+   */
+  stopAutomationStatusPolling();
 
   const poll = async () => {
+
     try {
-      const response = await fetch(
-        `${summaryUrl}?t=${Date.now()}`,
-        {
-          cache: 'no-store',
+
+      const summary =
+        await fetchTestSummary();
+
+      const currentGeneratedAt =
+        summary.generatedAt || null;
+
+      /*
+       * A new report has been generated.
+       */
+      if (
+        currentGeneratedAt &&
+        currentGeneratedAt !== startingGeneratedAt
+      ) {
+
+        console.log(
+          'New automation result detected.'
+        );
+
+        previousGeneratedAt =
+          currentGeneratedAt;
+
+        renderAutomationStatus(summary);
+
+        const button =
+          document.querySelector(
+            '#run-automation-tests'
+          );
+
+        if (button) {
+
+          button.disabled = false;
+
+          button.textContent =
+            '✓ Tests completed';
+
+          setTimeout(() => {
+
+            button.textContent =
+              '▶ Run Automation Tests';
+
+          }, 3000);
         }
+
+        /*
+         * Important:
+         * Stop polling because the new result
+         * has been received.
+         */
+        stopAutomationStatusPolling();
+
+        return;
+      }
+
+      /*
+       * No new report yet.
+       * Keep checking.
+       */
+      pollingTimer = setTimeout(
+        poll,
+        POLLING_INTERVAL
       );
 
-      if (!response.ok) {
-        throw new Error(
-          `Unable to retrieve test summary: ${response.status}`
-        );
-      }
-
-      const summary = await response.json();
-
-      if (!summary.generatedAt) {
-        setTimeout(poll, pollingInterval);
-        return;
-      }
-
-      const generatedTime =
-        new Date(summary.generatedAt).getTime();
-
-      /*
-       * Ignore the existing report.
-       * We only want to update the dashboard when
-       * a NEW test summary has been generated.
-       */
-      if (generatedTime <= initialRunTime) {
-        setTimeout(poll, pollingInterval);
-        return;
-      }
-
-      /*
-       * A new test result is available.
-       */
-      await loadAutomationStatus();
-
-      const button =
-        document.querySelector('#run-automation-tests');
-
-      if (button) {
-        button.disabled = false;
-        button.textContent = '✓ Tests completed';
-
-        setTimeout(() => {
-          button.textContent =
-            '▶ Run Automation Tests';
-        }, 3000);
-      }
-
     } catch (error) {
+
       console.error(
         'Unable to check automation status:',
         error
       );
 
-      setTimeout(poll, pollingInterval);
+      /*
+       * Keep polling if a temporary
+       * network error occurs.
+       */
+      pollingTimer = setTimeout(
+        poll,
+        POLLING_INTERVAL
+      );
     }
   };
 
-  setTimeout(poll, pollingInterval);
+  /*
+   * First check after 10 seconds.
+   */
+  pollingTimer = setTimeout(
+    poll,
+    POLLING_INTERVAL
+  );
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderTestCatalog();
-  loadAutomationStatus();
+/*
+ * Stop polling.
+ */
+function stopAutomationStatusPolling() {
 
-  document.addEventListener(
-    'click',
-    (event) => {
-      const button = event.target.closest(
+  if (pollingTimer) {
+
+    clearTimeout(
+      pollingTimer
+    );
+
+    pollingTimer = null;
+  }
+}
+
+
+/*
+ * Handle button clicks.
+ */
+document.addEventListener(
+  'click',
+  (event) => {
+
+    const button =
+      event.target.closest(
         '#run-automation-tests'
       );
 
-      if (!button) {
-        return;
-      }
-
-      runAutomationTests();
+    if (!button) {
+      return;
     }
-  );
-});
+
+    runAutomationTests();
+  }
+);
+
+
+/*
+ * Initial page load.
+ */
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    renderTestCatalog();
+
+    loadAutomationStatus();
+
+  }
+);
