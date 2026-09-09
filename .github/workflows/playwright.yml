@@ -84,8 +84,28 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
 
+
+      - name: Clean Allure results
+        run: |
+          rm -rf allure-results
+          mkdir -p allure-results
+
       - name: Run regression tests
         run: npm run test:e2e
+
+      - name: Verify fresh Playwright results
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          echo "=== Fresh result files ==="
+
+          find allure-results -type f -name '*-result.json' -print
+
+          echo ""
+          echo "=== Result timestamps ==="
+
+          find allure-results -type f -name '*-result.json' \
+            -exec stat -c '%y %n' {} \;
       
       - name: Generate test summary
         if: ${{ !cancelled() }}
@@ -110,17 +130,27 @@ jobs:
       
       - name: Inspect Allure results
         if: ${{ !cancelled() }}
+        shell: bash
         run: |
-          echo "=== Allure Results ==="
-          find allure-results -maxdepth 2 -type f -print
+          echo "========================================"
+          echo "ALLURE RESULTS"
+          echo "========================================"
 
           echo ""
-          echo "=== Result file count ==="
-          find allure-results -type f | wc -l
+          echo "Result files:"
+          find allure-results -type f -name '*-result.json' -print
 
           echo ""
-          echo "=== Result files ==="
-          ls -lah allure-results/
+          echo "Result file count:"
+          find allure-results -type f -name '*-result.json' | wc -l
+
+          echo ""
+          echo "Result timestamps:"
+          find allure-results -type f -name '*-result.json' -exec stat -c '%y %n' {} \;
+
+          echo ""
+          echo "History files:"
+          find allure-results/history -type f -print 2>/dev/null || true
 
       - name: Inspect Allure results before generation
         if: ${{ !cancelled() }}
