@@ -161,7 +161,7 @@ jobs:
           publish_branch: gh-pages
           publish_dir: allure-report
           destination_dir: allure-history
-          keep_files: true
+          keep_files: false
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
