@@ -93,6 +93,24 @@ jobs:
       - name: Run regression tests
         run: npm run test:e2e
 
+      - name: Verify Allure results
+        if: ${{ !cancelled() }}
+        run: |
+          echo "========================================"
+          echo "ALLURE RESULTS AFTER PLAYWRIGHT"
+          echo "========================================"
+
+          echo "Result files:"
+          find allure-results -maxdepth 1 -type f -print || true
+
+          echo ""
+          echo "Total result files:"
+          find allure-results -maxdepth 1 -type f | wc -l
+
+          echo ""
+          echo "Allure results directory:"
+          ls -lah allure-results/
+
       - name: Verify fresh Playwright results
         if: ${{ !cancelled() }}
         shell: bash

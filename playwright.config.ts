@@ -10,6 +10,7 @@ export default defineConfig({
       ['html'],
       ['list'],
       ['json', { outputFile: 'test-results/playwright-results.json' }],
+      ['allure-playwright'],
     ],
 
 
