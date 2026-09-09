@@ -153,6 +153,19 @@ jobs:
           echo "Allure history:"
           ls -la allure-report/history/ || true
 
+      - name: Verify generated Allure report
+        run: |
+          echo "=== Generated index.html UUID ==="
+          grep "allure-report-uuid" allure-report/index.html
+
+          echo ""
+          echo "=== Generated JS assets ==="
+          find allure-report/assets -maxdepth 1 -type f -name "*.js" -print
+
+          echo ""
+          echo "=== Generated report files ==="
+          find allure-report -type f | wc -l    
+
       - name: Publish Allure history
         if: ${{ !cancelled() }}
         uses: peaceiris/actions-gh-pages@v4
@@ -162,6 +175,21 @@ jobs:
           publish_dir: allure-report
           destination_dir: allure-history
           keep_files: false
+          force_orphan: false
+
+      - name: Verify gh-pages report
+        run: |
+          git clone --depth 1 --branch gh-pages \
+            https://github.com/${{ github.repository }}.git gh-pages-check
+
+          echo "=== Published index.html UUID ==="
+          grep "allure-report-uuid" \
+            gh-pages-check/allure-history/index.html
+
+          echo ""
+          echo "=== Published JS assets ==="
+          find gh-pages-check/allure-history/assets \
+            -maxdepth 1 -type f -name "*.js" -print
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
