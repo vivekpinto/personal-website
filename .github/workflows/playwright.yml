@@ -122,6 +122,38 @@ jobs:
           echo "=== Result files ==="
           ls -lah allure-results/
 
+      - name: Inspect Allure results before generation
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "ALLURE RESULTS BEFORE GENERATION"
+          echo "========================================"
+
+          echo ""
+          echo "Result files:"
+          find allure-results -maxdepth 1 -type f -print
+
+          echo ""
+          echo "History files:"
+          find allure-results/history -type f -print 2>/dev/null || true
+
+          echo ""
+          echo "Total result files:"
+          find allure-results -maxdepth 1 -type f | wc -l
+
+          echo ""
+          echo "Result file timestamps:"
+          stat allure-results/*-result.json 2>/dev/null || true
+
+          echo ""
+          echo "Result file contents:"
+          for file in allure-results/*-result.json; do
+            echo "----------------------------------------"
+            echo "$file"
+            cat "$file"
+          done    
+
       - name: Generate Allure report
         if: ${{ !cancelled() }}
         run: |
