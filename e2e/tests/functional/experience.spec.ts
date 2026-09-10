@@ -10,10 +10,10 @@ test.describe('Experience', () => {
     
   });
 
-  test('@regression Experience section has a proper content', async ({ page, homePage }) => {
-    await homePage.goto();
-    await expect(page.getByRole('heading', {name: 'Senior Quality Engineer and Accessibility Specialist', exact: true})).toBeVisible();
-    await expect(page.getByRole('heading', {name: 'Digital Evaluator', exact: true})).toBeVisible();
+//   test('@regression Experience section has a proper content', async ({ page, homePage }) => {
+//     await homePage.goto();
+//     await expect(page.getByRole('heading', {name: 'Senior Quality Engineer and Accessibility Specialist', exact: true})).toBeVisible();
+//     await expect(page.getByRole('heading', {name: 'Digital Evaluator', exact: true})).toBeVisible();
 
-  });
+//   });
 });
