@@ -1,10 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+const environment = process.env.TEST_ENV || 'local';
+
+dotenv.config({
+  path: `.env.${environment}`,
+});
+
+console.log(`Running tests against: ${environment}`);
+console.log(`Base URL: ${process.env.BASE_URL}`);
 
 export default defineConfig({
     testDir: './e2e/tests/',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 0,
+    retries: 2,
     workers: process.env.CI ? 1 : undefined,
      reporter: [
       ['html'],
@@ -15,7 +25,7 @@ export default defineConfig({
 
 
     use: {
-        baseURL: 'https://vivekpinto.github.io/personal-website/',
+        baseURL: process.env.BASE_URL,
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',

@@ -1,4 +1,6 @@
 name: Playwright E2E Tests
+env:
+    TEST_ENV: production
 
 on:
   push:

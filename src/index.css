@@ -199,6 +199,7 @@ ul {
 .nav-link.is-active,
 .mobile-nav-link:hover {
   color: var(--color-blue-600);
+  text-decoration: underline;
 }
 
 .menu-toggle {
@@ -614,11 +615,41 @@ ul {
   line-height: 1.25;
 }
 
-.experience-card__company {
+.college-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 0.25rem;
   color: var(--color-blue-600);
   font-size: 1.125rem;
   font-weight: 800;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color 180ms ease;
+}
+
+.experience-card__company {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  color: var(--color-blue-600);
+  font-size: 1.125rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color 180ms ease;
+}
+
+.experience-card__company:hover {
+  color: var(--color-blue-700);
+}
+
+.experience-card__company-icon {
+  color: var(--color-slate-500);
+  flex-shrink: 0;
 }
 
 .experience-card__meta {
