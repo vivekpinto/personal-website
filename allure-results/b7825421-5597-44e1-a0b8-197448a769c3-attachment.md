@@ -1,0 +1,50 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: functional\experience.spec.ts >> Experience >> @regression Experience section has a proper content
+- Location: e2e\tests\functional\experience.spec.ts:13:3
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: getByRole('heading', { name: 'Quality Assurance Engineer | Accessibility Specialist', exact: true })
+Expected: visible
+Timeout: 5000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" with timeout 5000ms
+  - waiting for getByRole('heading', { name: 'Quality Assurance Engineer | Accessibility Specialist', exact: true })
+
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '../../fixtures/test-fixtures';
+  2  | 
+  3  | 
+  4  | test.describe('Experience', () => {
+  5  |   test('@regression User navigates to the Experience section', async ({ homePage }) => {
+  6  |     await homePage.goto();
+  7  |     await expect(homePage.navigation.experienceLink).toBeVisible();
+  8  |     await homePage.navigation.goToExperience();
+  9  |     await expect(homePage.experienceHeading).toBeVisible();
+  10 |     
+  11 |   });
+  12 | 
+  13 |   test('@regression Experience section has a proper content', async ({ page }) => {
+> 14 |     await expect(page.getByRole('heading', {name: 'Quality Assurance Engineer | Accessibility Specialist', exact: true})).toBeVisible();
+     |                                                                                                                           ^ Error: expect(locator).toBeVisible() failed
+  15 |     await expect(page.getByRole('heading', {name: 'Digital Evaluator', exact: true})).toBeVisible();
+  16 | 
+  17 |   });
+  18 | });
+```
