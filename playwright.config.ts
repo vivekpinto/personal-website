@@ -3,9 +3,11 @@ import dotenv from 'dotenv';
 
 const environment = process.env.TEST_ENV || 'local';
 
-dotenv.config({
-  path: `.env.${environment}`,
-});
+if (environment === 'local') {
+  dotenv.config({
+    path: '.env.local',
+  });
+}
 
 console.log(`Running tests against: ${environment}`);
 console.log(`Base URL: ${process.env.BASE_URL}`);

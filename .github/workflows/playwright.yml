@@ -1,6 +1,7 @@
 name: Playwright E2E Tests
 env:
     TEST_ENV: production
+    BASE_URL: https://vivekpinto.github.io/personal-website/
 
 on:
   push:
