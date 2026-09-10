@@ -1,4 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","638","@regression user can navigate to Projects","chromium","2026-09-09","passed","2026-09-09","","functional/projects.spec.ts","",""
-"","445","@smoke user can navigate to Experience","chromium","2026-09-09","passed","2026-09-09","","navigation/navigation.spec.ts","",""
-"","399","@smoke portfolio homepage loads","chromium","2026-09-09","passed","2026-09-09","","smoke/homepage.spec.ts","",""
+"","303","@smoke portfolio homepage loads","chromium","2026-09-10","passed","2026-09-10","","smoke/homepage.spec.ts","",""
+"","826","@regression user can navigate to Projects","chromium","2026-09-10","passed","2026-09-10","","functional/projects.spec.ts","",""
+"","351","@smoke user can navigate to Experience","chromium","2026-09-10","passed","2026-09-10","","navigation/navigation.spec.ts","",""
