@@ -17,30 +17,18 @@ test.describe('Experience', () => {
 
   });
 
-  test('@regression The links in the experience section are functional', async ({ homePage, companyLink, openZeusPage }) => {
+  test('@regression The links in the experience section are functional', async ({ homePage, openExternalPage }) => {
     await homePage.goto();
-    await companyLink.clickZeusLink();
-     const zeusPage = await openZeusPage();
 
-        await expect(zeusPage).toHaveURL(
-            'https://zeuslearning.com/'
-        );
+    const zeusPage = await openExternalPage('Zeus Learning', 'https://zeuslearning.com/');
+    await zeusPage.close();
 
-        await zeusPage.close();
-    }
-);
+    const AccessibleCommunityPages = await openExternalPage('Accessible Community', 'https://accessiblecommunity.org/');
+    await AccessibleCommunityPages.close();
+  
+  });
 
 
     
 
 });
-    // await expect(newPage.getByRole('link', {name: 'Zeus Learning', exact: true})).toBeVisible();
-    // await page.getByRole('link', {name: 'Zeus Learning', exact: true}).click();
-    // await page.waitForEvent('popup');
-    // await expect(page).toHaveURL('https://zeuslearning.com/');
-    // await page.goBack();
-    // await expect(page.getByRole('link', {name: 'Accessible Community', exact: true})).toBeVisible();
-    // await page.getByRole('link', {name: 'Accessible Community', exact: true}).click();
-    // await page.waitForEvent('popup');
-    // await expect(page).toHaveURL('https://accessiblecommunity.org/');
-    // await page.goBack();
