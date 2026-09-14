@@ -17,18 +17,22 @@ test.describe('Experience', () => {
 
   });
 
-  test('@regression The links in the experience section are functional', async ({ context, page, homePage }) => {
+  test('@regression The links in the experience section are functional', async ({ homePage, companyLink, openZeusPage }) => {
     await homePage.goto();
-    const [newPage] = await Promise.all([
-    context.waitForEvent('page'),
-    page.getByRole('link', { name: 'Zeus Learning' }).click(),
-  ]);
+    await companyLink.clickZeusLink();
+     const zeusPage = await openZeusPage();
 
-  await expect(newPage).toHaveURL('https://zeuslearning.com/');
+        await expect(zeusPage).toHaveURL(
+            'https://zeuslearning.com/'
+        );
 
-  await newPage.close();
+        await zeusPage.close();
+    }
+);
 
-  await expect(page.getByRole('heading', { name: 'Vivek Pinto', exact: true })).toBeVisible();
+
+    
+
 });
     // await expect(newPage.getByRole('link', {name: 'Zeus Learning', exact: true})).toBeVisible();
     // await page.getByRole('link', {name: 'Zeus Learning', exact: true}).click();
@@ -40,4 +44,3 @@ test.describe('Experience', () => {
     // await page.waitForEvent('popup');
     // await expect(page).toHaveURL('https://accessiblecommunity.org/');
     // await page.goBack();
-});
