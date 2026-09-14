@@ -4,16 +4,15 @@ import { test, expect } from '../../fixtures/test-fixtures';
 test.describe('Experience', () => {
   test('@regression User navigates to the Experience section', async ({ homePage }) => {
     await homePage.goto();
-    await expect(homePage.navigation.experienceLink).toBeVisible();
-    await homePage.navigation.goToExperience();
+    await homePage.goToExperience();
     await expect(homePage.experienceHeading).toBeVisible();
     
   });
 
-  test('@regression Experience section has a proper content headings', async ({ page, homePage }) => {
+  test('@regression Experience section has a proper content headings', async ({homePage, experience }) => {
     await homePage.goto();
-    await expect(page.getByRole('heading', {name: 'Senior Quality Engineer and Accessibility Specialist', exact: true})).toBeVisible();
-    await expect(page.getByRole('heading', {name: 'Digital Evaluator', exact: true})).toBeVisible();
+    await expect(experience.ZeusHeading).toBeVisible();
+    await expect(experience.AccessibleCommunityHeading).toBeVisible();
 
   });
 

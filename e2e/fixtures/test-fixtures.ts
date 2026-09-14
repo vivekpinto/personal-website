@@ -1,10 +1,12 @@
 import { test as base, expect , Page} from '@playwright/test';
 import { HomePage } from '../pages/Homepage';
 import { Navigation } from '../components/navigation';
+import { Experience } from '../components/experience';
 
 type Fixtures = {
   homePage: HomePage;
   navigation: Navigation;
+  experience: Experience
   openExternalPage: (
       linkName: string,
       expectedUrl: string
@@ -24,6 +26,13 @@ export const test = base.extend<Fixtures>({
 
     await use(homePage);
   },
+
+  experience: async ({page}, use) =>{
+    const experience = new Experience(page);
+    await use(experience);
+  },
+
+  
 
   openExternalPage: async ({ page, context }, use) => {
 
